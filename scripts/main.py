@@ -1,6 +1,6 @@
 from load_data import loadData
 from clean_data import cleanData
-from train_model import train_lg_model, train_rf_model
+from train_model import train_lg_model, train_rf_model, train_gb_model
 from calculate_metrics import calculate_metrics
 
 def main():
@@ -23,7 +23,12 @@ def main():
 
     #ISTO SVE RADIMO SADA SAMO ZA DRUGI MODEL
     rf_trained_model, x_test, y_test, encoders = train_rf_model(df, rf_model_path, targetColumn)
-    rf_metrics = calculate_metrics( rf_trained_model, x_test, y_test, encoders)
+    rf_metrics = calculate_metrics(rf_trained_model, x_test, y_test, encoders)
+
+    #GRADIENT BOOSTING METODA
+    gb_trained_model, x_test, y_test, encoders = train_gb_model(df, gb_model_path, targetColumn)
+    gb_metrics = calculate_metrics(gb_trained_model, x_test, y_test, encoders)
+    
 
 
     print("LR Metrics rezultati:")

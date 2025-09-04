@@ -1,7 +1,7 @@
 import pandas as pd
 import pickle 
 from sklearn.discriminant_analysis import StandardScaler
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import LabelEncoder
@@ -57,3 +57,32 @@ def train_rf_model(df : pd.DataFrame, model_path, targetColumn):
         pickle.dump(model, file)
     
     return model, x_test, y_test, labelEncoders
+
+
+
+def train_gb_model(df: pd.DataFrame, model_path, targetColumn):
+    
+    df = df.astype(str)
+    
+    labelEncoders = {}
+
+    for col in df.select_dtypes(include=['object']).columns:
+        le = LabelEncoder()
+        df[col] = le.fit_transform(df[col])
+        labelEncoders[col] = le
+
+    x = df.drop(targetColumn, axis = 1)
+    y = df[targetColumn]
+
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+    model = GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, max_depth=3, max_features='sqrt', random_state=67)
+
+    with open(model_path, 'wb') as file:
+        pickle.dump(model, file)
+    
+    return model, x_test, y_test, labelEncoders
+    
+
+
+
+
